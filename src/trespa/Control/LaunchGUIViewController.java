@@ -6,6 +6,7 @@
 
 package trespa.Control;
 
+import java.util.ArrayList;
 import java.util.List;
 import trespa.Model.*;
 import trespa.Model.Tuples.*;
@@ -38,10 +39,12 @@ public class LaunchGUIViewController
         int amountOfStops = this.amountOfStops(c, s);
         int amountOfPlacements = this.possiblePlacementsForRoute(c, s).size();
         
-        return new Pair(amountOfStops, amountOfPlacements);
+        Pair pair = new Pair(amountOfStops, amountOfPlacements);
+        
+        return pair;
     }
     
-    public Quartet totalForShipment(Country c, ShippingPoint s)
+    public Quintet totalForShipment(Country c, ShippingPoint s)
     {
         int totalPalletsForShipment = 0;
         float totalHeightForShipment;
@@ -56,34 +59,62 @@ public class LaunchGUIViewController
         int totalPlacementWeight = 0;
         
         int currentPalletsForPlacement;
+        float currentPalletWeightIncludingPlacement = 0.0f;
+        float currentPalletHeightIncludingPlacement = 0.0f;
+        
+        int currentQuantity;
+        int currentPanelsPer;
+        
+        List<LoadedPallet> pallets = new ArrayList<>();
         
         // Might change!
         int palletWeight = 500;
         
         for(Placement p : placements)
         {
-            if((p.getQuantity() % p.getPanelsPer()) == 0)
+            currentQuantity = p.getQuantity();
+            currentPanelsPer = p.getPanelsPer();
+            
+            if((currentQuantity % currentPanelsPer) == 0)
             {
-                currentPalletsForPlacement = (p.getQuantity() / p.getPanelsPer());
+                currentPalletsForPlacement = (currentQuantity / currentPanelsPer);
                 totalPalletsForShipment += currentPalletsForPlacement;
             }
             else
             {
-                currentPalletsForPlacement = (p.getQuantity() / p.getPanelsPer() + 1);
+                currentPalletsForPlacement = (currentQuantity / currentPanelsPer + 1);
                 totalPalletsForShipment += currentPalletsForPlacement;
             }
             
             totalPalletHeight += p.getPalletHeight();
-            totalPlacementHeight += (p.getThickness() * currentPalletsForPlacement);
+            totalPlacementHeight += (p.getThickness() * currentQuantity);
             totalPalletWeight += (currentPalletsForPlacement * palletWeight);
             totalPlacementWeight += p.getGrossWeight();
+            
+            for(int pallet = 0; pallet < currentPalletsForPlacement; pallet++)
+            {
+                currentPalletWeightIncludingPlacement = 1f;
+                if(currentQuantity > currentPanelsPer)
+                {
+                    currentPalletHeightIncludingPlacement = p.getPalletHeight() + (p.getThickness() * currentPanelsPer);
+                    currentQuantity -= currentPanelsPer;
+                }
+                else
+                {
+                    currentPalletHeightIncludingPlacement = p.getPalletHeight() + (p.getThickness() * currentQuantity);
+                }
+                
+                pallets.add(new LoadedPallet(currentPalletWeightIncludingPlacement, currentPalletHeightIncludingPlacement));
+            }
         }
         
         totalWeightForShipment = totalPlacementWeight + ((float)totalPalletWeight / 1000);
         totalHeightForShipment = (((float)totalPalletHeight + (float)totalPlacementHeight) / 1000);
         totalLoadingMetersForShipment = 1;
         
-        return new Quartet(totalPalletsForShipment, totalHeightForShipment, totalWeightForShipment, totalLoadingMetersForShipment);
+        Quintet quintet = new Quintet(totalPalletsForShipment, totalHeightForShipment, totalWeightForShipment, totalLoadingMetersForShipment, pallets);
+        
+        return quintet;
     }
     
     public List<ShippingPoint> fillComboBoxSP()

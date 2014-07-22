@@ -176,12 +176,19 @@ public class LaunchGUI extends javax.swing.JFrame
         Truck t = (Truck) truckComboBox.getSelectedItem();
         Country c = (Country) countryComboBox.getSelectedItem();
         
-        Quartet tfs = lgvc.totalForShipment(c, s);
+        Quintet tfs = lgvc.totalForShipment(c, s);
         
         palletsForShipmentLabel.setText(String.format("Pallets: %d", tfs.a));
         heightForShipmentLabel.setText(String.format("Height: %.3fm", tfs.b));
         weightForShipmentLabel.setText(String.format("Weight: %.3fkg", tfs.c));
         loadingMetersLabel.setText(String.format("Loading meters: %.2fm", tfs.d));
+        
+        List<LoadedPallet> pallets = (List<LoadedPallet>) tfs.e;
+        
+        for(LoadedPallet p : pallets)
+        {
+            System.out.println(p);
+        }
     }//GEN-LAST:event_manualButtonActionPerformed
 
     /**
