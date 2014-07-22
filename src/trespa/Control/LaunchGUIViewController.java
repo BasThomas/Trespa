@@ -93,7 +93,9 @@ public class LaunchGUIViewController
             
             for(int pallet = 0; pallet < currentPalletsForPlacement; pallet++)
             {
+                // TODO
                 currentPalletWeightIncludingPlacement = 1f;
+                
                 if(currentQuantity > currentPanelsPer)
                 {
                     currentPalletHeightIncludingPlacement = p.getPalletHeight() + (p.getThickness() * currentPanelsPer);

@@ -184,11 +184,6 @@ public class LaunchGUI extends javax.swing.JFrame
         loadingMetersLabel.setText(String.format("Loading meters: %.2fm", tfs.d));
         
         List<LoadedPallet> pallets = (List<LoadedPallet>) tfs.e;
-        
-        for(LoadedPallet p : pallets)
-        {
-            System.out.println(p);
-        }
     }//GEN-LAST:event_manualButtonActionPerformed
 
     /**
