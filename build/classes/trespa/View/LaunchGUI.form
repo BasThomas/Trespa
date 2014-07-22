@@ -59,6 +59,7 @@
                           <Component id="palletsForShipmentLabel" min="-2" pref="204" max="-2" attributes="0"/>
                           <Component id="heightForShipmentLabel" min="-2" max="-2" attributes="0"/>
                           <Component id="weightForShipmentLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="loadingMetersLabel" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -96,6 +97,8 @@
                       <Component id="heightForShipmentLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="weightForShipmentLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="loadingMetersLabel" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace pref="114" max="32767" attributes="0"/>
@@ -169,6 +172,11 @@
     <Component class="javax.swing.JLabel" name="weightForShipmentLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Weight"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="loadingMetersLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Loading meters"/>
       </Properties>
     </Component>
   </SubComponents>

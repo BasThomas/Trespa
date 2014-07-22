@@ -6,8 +6,6 @@
 
 package trespa.Control;
 
-import java.util.List;
-import trespa.Model.*;
 import trespa.View.*;
 
 /**

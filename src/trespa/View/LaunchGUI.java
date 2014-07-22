@@ -52,6 +52,7 @@ public class LaunchGUI extends javax.swing.JFrame
         palletsForShipmentLabel = new javax.swing.JLabel();
         heightForShipmentLabel = new javax.swing.JLabel();
         weightForShipmentLabel = new javax.swing.JLabel();
+        loadingMetersLabel = new javax.swing.JLabel();
 
         jLabel1.setText("jLabel1");
 
@@ -88,6 +89,8 @@ public class LaunchGUI extends javax.swing.JFrame
 
         weightForShipmentLabel.setText("Weight");
 
+        loadingMetersLabel.setText("Loading meters");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -115,7 +118,8 @@ public class LaunchGUI extends javax.swing.JFrame
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(palletsForShipmentLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(heightForShipmentLabel)
-                            .addComponent(weightForShipmentLabel))))
+                            .addComponent(weightForShipmentLabel)
+                            .addComponent(loadingMetersLabel))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -144,7 +148,9 @@ public class LaunchGUI extends javax.swing.JFrame
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(heightForShipmentLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(weightForShipmentLabel)))
+                        .addComponent(weightForShipmentLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(loadingMetersLabel)))
                 .addContainerGap(114, Short.MAX_VALUE))
         );
 
@@ -170,11 +176,12 @@ public class LaunchGUI extends javax.swing.JFrame
         Truck t = (Truck) truckComboBox.getSelectedItem();
         Country c = (Country) countryComboBox.getSelectedItem();
         
-        Triplet tfs = lgvc.totalForShipment(c, s);
+        Quartet tfs = lgvc.totalForShipment(c, s);
         
         palletsForShipmentLabel.setText(String.format("Pallets: %d", tfs.a));
         heightForShipmentLabel.setText(String.format("Height: %.3fm", tfs.b));
         weightForShipmentLabel.setText(String.format("Weight: %.3fkg", tfs.c));
+        loadingMetersLabel.setText(String.format("Loading meters: %.2fm", tfs.d));
     }//GEN-LAST:event_manualButtonActionPerformed
 
     /**
@@ -227,6 +234,7 @@ public class LaunchGUI extends javax.swing.JFrame
     private javax.swing.JComboBox countryComboBox;
     private javax.swing.JLabel heightForShipmentLabel;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel loadingMetersLabel;
     private javax.swing.JButton manualButton;
     private javax.swing.JLabel palletsForShipmentLabel;
     private javax.swing.JLabel placementsLabel;

@@ -41,11 +41,12 @@ public class LaunchGUIViewController
         return new Pair(amountOfStops, amountOfPlacements);
     }
     
-    public Triplet totalForShipment(Country c, ShippingPoint s)
+    public Quartet totalForShipment(Country c, ShippingPoint s)
     {
         int totalPalletsForShipment = 0;
-        float totalHeightForShipment = 0;
-        float totalWeightForShipment = 0;
+        float totalHeightForShipment;
+        float totalWeightForShipment;
+        float totalLoadingMetersForShipment = 0;
         
         List<Placement> placements = this.possiblePlacementsForRoute(c, s);
         
@@ -80,8 +81,9 @@ public class LaunchGUIViewController
         
         totalWeightForShipment = totalPlacementWeight + ((float)totalPalletWeight / 1000);
         totalHeightForShipment = (((float)totalPalletHeight + (float)totalPlacementHeight) / 1000);
+        totalLoadingMetersForShipment = 1;
         
-        return new Triplet(totalPalletsForShipment, totalHeightForShipment, totalWeightForShipment);
+        return new Quartet(totalPalletsForShipment, totalHeightForShipment, totalWeightForShipment, totalLoadingMetersForShipment);
     }
     
     public List<ShippingPoint> fillComboBoxSP()
