@@ -80,9 +80,9 @@ public class LaunchGUIViewController
     public Quintet totalForShipment(Country c, ShippingPoint s, Truck t)
     {
         int totalPalletsForShipment = 0;
-        float totalHeightForShipment = 0;
-        float totalWeightForShipment = 0;
-        int totalLoadingMetersForShipment = 0;
+        float totalHeightForShipment;
+        float totalWeightForShipment;
+        int totalLoadingMetersForShipment;
         
         List<Placement> placements = this.possiblePlacementsForRoute(c, s);
         
@@ -90,8 +90,8 @@ public class LaunchGUIViewController
         int totalPalletWeightIncludingPlacement = 0;
         
         int currentPalletsForPlacement;
-        float currentPalletWeightIncludingPlacement = 0.0f;
-        float currentPalletHeightIncludingPlacement = 0.0f;
+        float currentPalletWeightIncludingPlacement;
+        float currentPalletHeightIncludingPlacement;
         
         int currentQuantity;
         int currentPanelsPer;

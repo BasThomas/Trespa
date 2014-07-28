@@ -53,12 +53,13 @@ public class LaunchGUI extends javax.swing.JFrame
         heightForShipmentLabel = new javax.swing.JLabel();
         weightForShipmentLabel = new javax.swing.JLabel();
         loadingMetersLabel = new javax.swing.JLabel();
+        textAreaScrollPane = new javax.swing.JScrollPane();
+        generatedIndexTextBox = new javax.swing.JTextArea();
 
         jLabel1.setText("jLabel1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Trespa :: Launch");
-        setPreferredSize(new java.awt.Dimension(650, 450));
 
         printButton.setText("Print");
         printButton.addActionListener(new java.awt.event.ActionListener()
@@ -83,6 +84,13 @@ public class LaunchGUI extends javax.swing.JFrame
         });
 
         automaticButton.setText("Automatic");
+        automaticButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                automaticButtonActionPerformed(evt);
+            }
+        });
 
         palletsForShipmentLabel.setText("Pallets");
 
@@ -92,35 +100,45 @@ public class LaunchGUI extends javax.swing.JFrame
 
         loadingMetersLabel.setText("Loading meters");
 
+        generatedIndexTextBox.setEditable(false);
+        generatedIndexTextBox.setColumns(20);
+        generatedIndexTextBox.setRows(5);
+        textAreaScrollPane.setViewportView(generatedIndexTextBox);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(shippingPointComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(automaticButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(manualButton))
-                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(truckComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(printButton)
-                            .addComponent(countryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
+                                .addComponent(shippingPointComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(automaticButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(manualButton))
+                            .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(placementsLabel)
-                                    .addComponent(stopsLabel))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 223, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(palletsForShipmentLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(heightForShipmentLabel)
-                            .addComponent(weightForShipmentLabel)
-                            .addComponent(loadingMetersLabel))))
+                                    .addComponent(truckComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(printButton)
+                                    .addComponent(countryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(placementsLabel)
+                                            .addComponent(stopsLabel))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 223, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(palletsForShipmentLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(heightForShipmentLabel)
+                                    .addComponent(weightForShipmentLabel)
+                                    .addComponent(loadingMetersLabel)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(textAreaScrollPane)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -152,7 +170,9 @@ public class LaunchGUI extends javax.swing.JFrame
                         .addComponent(weightForShipmentLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(loadingMetersLabel)))
-                .addContainerGap(264, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(textAreaScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -183,13 +203,62 @@ public class LaunchGUI extends javax.swing.JFrame
         
         Quintet tfs = lgvc.totalForShipment(c, s, t);
         
+        // Make sure all textBoxes are emptied before continuing.
+        generatedIndexTextBox.setText(null);
+        
         palletsForShipmentLabel.setText(String.format("Pallets: %d", tfs.a));
         heightForShipmentLabel.setText(String.format("Height: %.3fm", tfs.b));
         weightForShipmentLabel.setText(String.format("Weight: %.3fkg", tfs.c));
         loadingMetersLabel.setText(String.format("Loading meters: %dm", tfs.d));
         
         List<LoadedPallet> pallets = (List<LoadedPallet>) tfs.e;
+        
+        for (LoadedPallet lp : pallets)
+        {
+            generatedIndexTextBox.append(lp + "\n");
+        }
     }//GEN-LAST:event_manualButtonActionPerformed
+    
+    /**
+     * Calculates all shipping details automatically.
+     * @param evt 
+     */
+    private void automaticButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_automaticButtonActionPerformed
+    {//GEN-HEADEREND:event_automaticButtonActionPerformed
+        ShippingPoint s = (ShippingPoint) shippingPointComboBox.getSelectedItem();
+        Truck t = (Truck) truckComboBox.getSelectedItem();
+        Country c = (Country) countryComboBox.getSelectedItem();
+        
+        Quintet tfs = lgvc.totalForShipment(c, s, t);
+        
+        int palletLength = 7;
+        
+        // Make sure all textBoxes are emptied before continuing.
+        generatedIndexTextBox.setText(null);
+        
+        palletsForShipmentLabel.setText(String.format("Pallets: %d", tfs.a));
+        heightForShipmentLabel.setText(String.format("Height: %.3fm", tfs.b));
+        weightForShipmentLabel.setText(String.format("Weight: %.3fkg", tfs.c));
+        loadingMetersLabel.setText(String.format("Loading meters: %dm", tfs.d));
+        
+        List<LoadedPallet> pallets = (List<LoadedPallet>) tfs.e;
+        
+        for (LoadedPallet lp : pallets)
+        {
+            // Generate index
+            float currentHeight = 0f;
+            
+            while(currentHeight < t.getHeight())
+            {
+                for(int i = 0; i < palletLength; i++)
+                {
+                    generatedIndexTextBox.append("_ ");
+                }
+                generatedIndexTextBox.append("\n");
+                currentHeight += lp.getHeight();
+            }
+        }
+    }//GEN-LAST:event_automaticButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -239,6 +308,7 @@ public class LaunchGUI extends javax.swing.JFrame
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton automaticButton;
     private javax.swing.JComboBox countryComboBox;
+    private javax.swing.JTextArea generatedIndexTextBox;
     private javax.swing.JLabel heightForShipmentLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel loadingMetersLabel;
@@ -248,6 +318,7 @@ public class LaunchGUI extends javax.swing.JFrame
     private javax.swing.JButton printButton;
     private javax.swing.JComboBox shippingPointComboBox;
     private javax.swing.JLabel stopsLabel;
+    private javax.swing.JScrollPane textAreaScrollPane;
     private javax.swing.JComboBox truckComboBox;
     private javax.swing.JLabel weightForShipmentLabel;
     // End of variables declaration//GEN-END:variables
