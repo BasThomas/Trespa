@@ -17,6 +17,13 @@ public class Truck
     private float length;
     private float height;
     
+    /**
+     * Constructor.
+     * @param truckID The Trucks' ID.
+     * @param maxWeight The Truck's max. weight.
+     * @param length The Truck's length.
+     * @param height The Truck's height.
+     */
     public Truck(int truckID, float maxWeight, float length, float height)
     {
         this.truckID = truckID;
@@ -25,6 +32,10 @@ public class Truck
         this.height = height;
     }
     
+    /**
+     * Gets a String representation of the instance.
+     * @return String representation of the instance.
+     */
     @Override
     public String toString()
     {

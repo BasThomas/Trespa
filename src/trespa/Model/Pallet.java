@@ -15,12 +15,21 @@ public class Pallet
     private String packCode;
     private int panelsPer;
     
+    /**
+     * Constructor.
+     * @param packCode The Pallet's packCode.
+     * @param panelsPer The amount of panels (max.) for pallet.
+     */
     public Pallet(String packCode, int panelsPer)
     {
         this.packCode = packCode;
         this.panelsPer = panelsPer;
     }
     
+    /**
+     * Gets a String representation of the instance.
+     * @return String representation of the instance.
+     */
     @Override
     public String toString()
     {

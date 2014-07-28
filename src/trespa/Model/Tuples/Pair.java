@@ -15,6 +15,11 @@ public class Pair<A, B>
     public final A a;
     public final B b;
     
+    /**
+     * Constructor.
+     * @param a first value in Pair.
+     * @param b second value in Pair.
+     */
     public Pair(A a, B b)
     {
         this.a = a;

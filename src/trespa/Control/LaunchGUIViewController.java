@@ -17,23 +17,45 @@ import trespa.Model.Tuples.*;
  */
 public class LaunchGUIViewController
 {
-    private Database database;
+    private final Database database;
     
+    /**
+     * Constructor.
+     */
     public LaunchGUIViewController()
     {
         database = new Database();
     }
     
-    public int amountOfStops(Country country, ShippingPoint shippingPoint)
+    /**
+     * Gets the amount of stops for a certain route.
+     * @param c Country
+     * @param s ShippingPoint
+     * @return the amount of stops.
+     */
+    public int amountOfStops(Country c, ShippingPoint s)
     {
-        return database.amountOfStopsForRoute(country, shippingPoint);
+        return database.amountOfStopsForRoute(c, s);
     }
     
-    public List<Placement> possiblePlacementsForRoute(Country country, ShippingPoint shippingPoint)
+    /**
+     * Gets a list of placements for a certain route.
+     * @param c Country
+     * @param s ShippingPoint
+     * @return list of placements.
+     */
+    public List<Placement> possiblePlacementsForRoute(Country c, ShippingPoint s)
     {
-        return database.getPossiblePlacementsForRoute(country, shippingPoint);
+        return database.getPossiblePlacementsForRoute(c, s);
     }
     
+    /**
+     * Gets the amount of stops and placements for a certain route.
+     * @param c Country
+     * @param s ShippingPoint
+     * @return Pair containing the amount of stops and
+     *          the amount of placements.
+     */
     public Pair stopsAndPlacementAmount(Country c, ShippingPoint s)
     {
         int amountOfStops = this.amountOfStops(c, s);
@@ -44,6 +66,17 @@ public class LaunchGUIViewController
         return pair;
     }
     
+    /**
+     * Gathers all information for a certain Shipment.
+     * @param c Country
+     * @param s ShippingPoint
+     * @param t Truck
+     * @return Quintet containing total pallets for shipment,
+     *          total height for shipment,
+     *          total weight for shipment,
+     *          total loading meters for shipment and
+     *          the amount of pallets.
+     */
     public Quintet totalForShipment(Country c, ShippingPoint s, Truck t)
     {
         int totalPalletsForShipment = 0;
@@ -115,16 +148,28 @@ public class LaunchGUIViewController
         return quintet;
     }
     
+    /**
+     * Gets a list of ShippingPoints.
+     * @return list of ShippingPoints.
+     */
     public List<ShippingPoint> fillComboBoxSP()
     {
         return database.getShippingPoints();
     }
     
+    /**
+     * Gets a list of Trucks.
+     * @return list of trucks.
+     */
     public List<Truck> fillComboBoxTruck()
     {
         return database.getTrucks();
     }
     
+    /**
+     * Gets a list of Countries.
+     * @return list of countries.
+     */
     public List<Country> fillComboBoxCountry()
     {
         return database.getCountries();

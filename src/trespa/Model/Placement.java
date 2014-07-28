@@ -26,7 +26,23 @@ public class Placement
     private float grossWeight;
     private int palletHeight;
     private int material;
-
+    
+    /**
+     * Constructor.
+     * @param placementID The Placement's ID.
+     * @param deliveryItem The Placement's deliveryItem.
+     * @param customer The Placement's Customer.
+     * @param issueDate The Placement's issueDate.
+     * @param productline The Placement's productline.
+     * @param thickness The Placement's thickness per panel.
+     * @param width The Placement's width per panel.
+     * @param length The Placement's length per panel.
+     * @param quantity The Placement's panel quantity.
+     * @param panelsPer The Placement's pallet max. panels (Pallet???)
+     * @param grossWeight The Placement's gross weight per pallet.
+     * @param palletHeight The Placement's palletheight.
+     * @param material The Placement's panel material.
+     */
     public Placement(int placementID, int deliveryItem, Customer customer, Date issueDate, Productline productline, float thickness, int width, int length, int quantity, int panelsPer, float grossWeight, int palletHeight, int material)
     {
         this.placementID = placementID;
@@ -43,7 +59,11 @@ public class Placement
         this.palletHeight = palletHeight;
         this.material = material;
     }
-
+    
+    /**
+     * Gets a String representation of the instance.
+     * @return String representation of the instance.
+     */
     @Override
     public String toString()
     {

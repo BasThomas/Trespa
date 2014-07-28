@@ -14,11 +14,19 @@ public class Productline
 {
     private String productline;
     
+    /**
+     * Constructor.
+     * @param productline String representation of the productline.
+     */
     public Productline(String productline)
     {
         this.productline = productline;
     }
     
+    /**
+     * Gets a String representation of the instance.
+     * @return String representation of the instance.
+     */
     @Override
     public String toString()
     {

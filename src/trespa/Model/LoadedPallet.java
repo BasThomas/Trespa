@@ -15,12 +15,21 @@ public class LoadedPallet
     private float weight;
     private float height;
     
+    /**
+     * Constructor.
+     * @param weight Weight of the pallet.
+     * @param height Height of the pallet.
+     */
     public LoadedPallet(float weight, float height)
     {
         this.weight = weight;
         this.height = height;
     }
     
+    /**
+     * Gets a String representation of the instance.
+     * @return String representation of the instance.
+     */
     @Override
     public String toString()
     {

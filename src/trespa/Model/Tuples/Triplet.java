@@ -16,6 +16,12 @@ public class Triplet<A, B, C>
     public final B b;
     public final C c;
     
+    /**
+     * Constructor.
+     * @param a first value in Triplet.
+     * @param b second value in Triplet.
+     * @param c third value in Triplet.
+     */
     public Triplet(A a, B b, C c)
     {
         this.a = a;

@@ -17,12 +17,21 @@ public class Shipment
     private int shipmentID;
     private List<Placement> placements;
     
+    /**
+     * Constructor.
+     * @param shipmentID The Shipment's ID.
+     * @param placements List of Placements in Shipment.
+     */
     public Shipment(int shipmentID, List<Placement> placements)
     {
         this.shipmentID = shipmentID;
         this.placements = placements;
     }
     
+    /**
+     * Gets a String representation of the instance.
+     * @return String representation of the instance.
+     */
     @Override
     public String toString()
     {

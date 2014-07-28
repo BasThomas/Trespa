@@ -16,6 +16,12 @@ public class ShippingPoint
     private String shippingPoint;
     private String postalCode;
     
+    /**
+     * Constructor.
+     * @param shippingID The ShippingPoint's ID.
+     * @param shippingPoint String representation of the ShippingPoint.
+     * @param postalCode String representation of the ShippingPoint's postal code.
+     */
     public ShippingPoint(int shippingID, String shippingPoint, String postalCode)
     {
         this.shippingID = shippingID;
@@ -23,6 +29,10 @@ public class ShippingPoint
         this.postalCode = postalCode;
     }
     
+    /**
+     * Gets a String representation of the instance.
+     * @return String representation of the instance.
+     */
     @Override
     public String toString()
     {

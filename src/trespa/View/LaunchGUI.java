@@ -170,7 +170,11 @@ public class LaunchGUI extends javax.swing.JFrame
         stopsLabel.setText(String.format("# stops (customers to deliver to): %d", sAndP.a));
         placementsLabel.setText(String.format("# placements to deliver: %d", sAndP.b));
     }//GEN-LAST:event_printButtonActionPerformed
-
+    
+    /**
+     * Calculates all shipping details with manual configurations.
+     * @param evt 
+     */
     private void manualButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_manualButtonActionPerformed
     {//GEN-HEADEREND:event_manualButtonActionPerformed
         ShippingPoint s = (ShippingPoint) shippingPointComboBox.getSelectedItem();
@@ -247,7 +251,10 @@ public class LaunchGUI extends javax.swing.JFrame
     private javax.swing.JComboBox truckComboBox;
     private javax.swing.JLabel weightForShipmentLabel;
     // End of variables declaration//GEN-END:variables
-
+    
+    /**
+     * Fills all comboboxes with available values.
+     */
     public final void fillComboBoxes()
     {
         shippingPointComboBox.removeAllItems();

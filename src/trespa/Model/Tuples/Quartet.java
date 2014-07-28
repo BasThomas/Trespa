@@ -17,6 +17,13 @@ public class Quartet<A, B, C, D>
     public final C c;
     public final D d;
     
+    /**
+     * Constructor.
+     * @param a first value in quartet.
+     * @param b second value in quartet.
+     * @param c third value in quartet.
+     * @param d fourth value in quartet.
+     */
     public Quartet(A a, B b, C c, D d)
     {
         this.a = a;

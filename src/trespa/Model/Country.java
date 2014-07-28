@@ -17,6 +17,12 @@ public class Country
     private String regionDesc;
     private Boolean hasRegionDesc;
     
+    /**
+     * Constructor.
+     * @param country String representation of Country.
+     * @param countryAbbr String representation of Country, shortened.
+     * @param regionDesc String representation of the regionDescription.
+     */
     public Country(String country, String countryAbbr, String regionDesc)
     {
         this.country = country;
@@ -26,6 +32,11 @@ public class Country
         this.hasRegionDesc = true;
     }
     
+    /**
+     * Constructor.
+     * @param country String representation of Country.
+     * @param countryAbbr String representation of Country, shortened.
+     */
     public Country(String country, String countryAbbr)
     {
         this.country = country;
@@ -35,6 +46,10 @@ public class Country
         this.hasRegionDesc = false;
     }
     
+    /**
+     * Gets a String representation of the instance.
+     * @return String representation of the instance.
+     */
     @Override
     public String toString()
     {

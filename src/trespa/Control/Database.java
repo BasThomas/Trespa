@@ -30,11 +30,17 @@ public class Database
     String username = "root";
     String password = "root";
     
+    /**
+     * Constructor.
+     */
     public Database()
     {
         openConnection();
     }
     
+    /**
+     * Opens the connection with the database.
+     */
     public final void openConnection()
     {
         try
@@ -47,6 +53,9 @@ public class Database
         }
     }
     
+    /**
+     * Closes the connection with the database.
+     */
     public void closeConnection()
     {
         if(rs != null)
@@ -86,6 +95,10 @@ public class Database
         }
     }
     
+    /**
+     * Gets a list of ShippingPoints.
+     * @return list of ShippingPoints.
+     */
     public List<ShippingPoint> getShippingPoints()
     {
         List<ShippingPoint> shippingPoints = new ArrayList<>();
@@ -123,6 +136,10 @@ public class Database
         return shippingPoints;
     }
     
+    /**
+     * Get a list of Customers.
+     * @return list of Customers.
+     */
     public List<Customer> getCustomers()
     {
         List<Customer> customers = new ArrayList<>();
@@ -167,6 +184,10 @@ public class Database
         return customers;
     }
     
+    /**
+     * Gets a list of Trucks.
+     * @return list of Trucks.
+     */
     public List<Truck> getTrucks()
     {
         List<Truck> trucks = new ArrayList<>();
@@ -206,6 +227,10 @@ public class Database
         return trucks;
     }
     
+    /**
+     * Gets a list of Countries.
+     * @return list of Countries.
+     */
     public List<Country> getCountries()
     {
         List<Country> countries = new ArrayList<>();
@@ -243,6 +268,12 @@ public class Database
         return countries;
     }
     
+    /**
+     * Gets the amount of stops needed for a certain route.
+     * @param country Country
+     * @param shippingPoint ShippingPoint
+     * @return amount of stops.
+     */
     public int amountOfStopsForRoute(Country country, ShippingPoint shippingPoint)
     {
         try
@@ -279,6 +310,12 @@ public class Database
         return 0;
     }
     
+    /**
+     * Gets a list of possible placements for a certain route.
+     * @param country Country
+     * @param shippingPoint ShippingPoint
+     * @return list of Placements.
+     */
     public List<Placement> getPossiblePlacementsForRoute(Country country, ShippingPoint shippingPoint)
     {
         List<Placement> placements = new ArrayList<>();
