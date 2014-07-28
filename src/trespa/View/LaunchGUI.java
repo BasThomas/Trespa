@@ -58,6 +58,7 @@ public class LaunchGUI extends javax.swing.JFrame
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Trespa :: Launch");
+        setPreferredSize(new java.awt.Dimension(650, 450));
 
         printButton.setText("Print");
         printButton.addActionListener(new java.awt.event.ActionListener()
@@ -114,7 +115,7 @@ public class LaunchGUI extends javax.swing.JFrame
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(placementsLabel)
                                     .addComponent(stopsLabel))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 137, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 223, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(palletsForShipmentLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(heightForShipmentLabel)
@@ -151,7 +152,7 @@ public class LaunchGUI extends javax.swing.JFrame
                         .addComponent(weightForShipmentLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(loadingMetersLabel)))
-                .addContainerGap(114, Short.MAX_VALUE))
+                .addContainerGap(264, Short.MAX_VALUE))
         );
 
         pack();
@@ -176,12 +177,12 @@ public class LaunchGUI extends javax.swing.JFrame
         Truck t = (Truck) truckComboBox.getSelectedItem();
         Country c = (Country) countryComboBox.getSelectedItem();
         
-        Quintet tfs = lgvc.totalForShipment(c, s);
+        Quintet tfs = lgvc.totalForShipment(c, s, t);
         
         palletsForShipmentLabel.setText(String.format("Pallets: %d", tfs.a));
         heightForShipmentLabel.setText(String.format("Height: %.3fm", tfs.b));
         weightForShipmentLabel.setText(String.format("Weight: %.3fkg", tfs.c));
-        loadingMetersLabel.setText(String.format("Loading meters: %.2fm", tfs.d));
+        loadingMetersLabel.setText(String.format("Loading meters: %dm", tfs.d));
         
         List<LoadedPallet> pallets = (List<LoadedPallet>) tfs.e;
     }//GEN-LAST:event_manualButtonActionPerformed

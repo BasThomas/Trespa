@@ -296,6 +296,7 @@ public class Database
                     "AND pl.packCode = pa.packCode\n" +
                     "AND cu.countryAbbr = ?\n" +
                     "AND s.shippingID = ?\n" +
+                    "AND pl.placementID = 1143730\n" + // FOR NOW FOR NOW FOR NOW
                     "ORDER BY pl.issueDate ASC;";
             
             ps = conn.prepareStatement(sql);

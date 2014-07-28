@@ -44,19 +44,17 @@ public class LaunchGUIViewController
         return pair;
     }
     
-    public Quintet totalForShipment(Country c, ShippingPoint s)
+    public Quintet totalForShipment(Country c, ShippingPoint s, Truck t)
     {
         int totalPalletsForShipment = 0;
-        float totalHeightForShipment;
-        float totalWeightForShipment;
-        float totalLoadingMetersForShipment = 0;
+        float totalHeightForShipment = 0;
+        float totalWeightForShipment = 0;
+        int totalLoadingMetersForShipment = 0;
         
         List<Placement> placements = this.possiblePlacementsForRoute(c, s);
         
-        int totalPalletHeight = 0;
-        int totalPlacementHeight = 0;
-        int totalPalletWeight = 0;
-        int totalPlacementWeight = 0;
+        int totalPalletHeightIncludingPlacement = 0;
+        int totalPalletWeightIncludingPlacement = 0;
         
         int currentPalletsForPlacement;
         float currentPalletWeightIncludingPlacement = 0.0f;
@@ -68,7 +66,8 @@ public class LaunchGUIViewController
         List<LoadedPallet> pallets = new ArrayList<>();
         
         // Might change!
-        int palletWeight = 500;
+        int palletWeight = 40; // In kilograms
+        int palletLength = 7; // In meters
         
         for(Placement p : placements)
         {
@@ -86,33 +85,30 @@ public class LaunchGUIViewController
                 totalPalletsForShipment += currentPalletsForPlacement;
             }
             
-            totalPalletHeight += p.getPalletHeight();
-            totalPlacementHeight += (p.getThickness() * currentQuantity);
-            totalPalletWeight += (currentPalletsForPlacement * palletWeight);
-            totalPlacementWeight += p.getGrossWeight();
-            
             for(int pallet = 0; pallet < currentPalletsForPlacement; pallet++)
             {
-                // TODO
-                currentPalletWeightIncludingPlacement = 1f;
-                
                 if(currentQuantity > currentPanelsPer)
                 {
                     currentPalletHeightIncludingPlacement = p.getPalletHeight() + (p.getThickness() * currentPanelsPer);
+                    currentPalletWeightIncludingPlacement = palletWeight + (currentPanelsPer * p.getGrossWeight());
                     currentQuantity -= currentPanelsPer;
                 }
                 else
                 {
                     currentPalletHeightIncludingPlacement = p.getPalletHeight() + (p.getThickness() * currentQuantity);
+                    currentPalletWeightIncludingPlacement = palletWeight + (currentQuantity * p.getGrossWeight());
                 }
                 
                 pallets.add(new LoadedPallet(currentPalletWeightIncludingPlacement, currentPalletHeightIncludingPlacement));
+                
+                totalPalletHeightIncludingPlacement += currentPalletHeightIncludingPlacement;
+                totalPalletWeightIncludingPlacement += currentPalletWeightIncludingPlacement;
             }
         }
         
-        totalWeightForShipment = totalPlacementWeight + ((float)totalPalletWeight / 1000);
-        totalHeightForShipment = (((float)totalPalletHeight + (float)totalPlacementHeight) / 1000);
-        totalLoadingMetersForShipment = 1;
+        totalHeightForShipment = ((float)totalPalletHeightIncludingPlacement / 1000); // In meters
+        totalWeightForShipment = totalPalletWeightIncludingPlacement; // In kilograms
+        totalLoadingMetersForShipment = Math.round(palletLength * (totalHeightForShipment / t.getHeight()));
         
         Quintet quintet = new Quintet(totalPalletsForShipment, totalHeightForShipment, totalWeightForShipment, totalLoadingMetersForShipment, pallets);
         
