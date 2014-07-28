@@ -102,6 +102,7 @@ public class LaunchGUI extends javax.swing.JFrame
 
         generatedIndexTextBox.setEditable(false);
         generatedIndexTextBox.setColumns(20);
+        generatedIndexTextBox.setFont(new java.awt.Font("Menlo", 0, 13)); // NOI18N
         generatedIndexTextBox.setRows(5);
         textAreaScrollPane.setViewportView(generatedIndexTextBox);
 
