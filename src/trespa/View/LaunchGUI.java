@@ -251,11 +251,7 @@ public class LaunchGUI extends javax.swing.JFrame
             
             while(currentHeight < t.getHeight())
             {
-                for(int i = 0; i < palletLength; i++)
-                {
-                    generatedIndexTextBox.append("_ ");
-                }
-                generatedIndexTextBox.append("\n");
+                generatedIndexTextBox.append("_\n");
                 currentHeight += lp.getHeight();
             }
         }

@@ -14,16 +14,25 @@ public class LoadedPallet
 {
     private float weight;
     private float height;
+    private int amount;
+    private float thickness;
+    private int length;
     
     /**
      * Constructor.
      * @param weight Weight of the pallet.
      * @param height Height of the pallet.
+     * @param amount Amount of panels on pallet.
+     * @param thickness Thickness of panel.
+     * @param length Length of panel.
      */
-    public LoadedPallet(float weight, float height)
+    public LoadedPallet(float weight, float height, int amount, float thickness, int length)
     {
         this.weight = weight;
         this.height = height;
+        this.amount = amount;
+        this.thickness = thickness;
+        this.length = length;
     }
     
     /**
@@ -33,7 +42,12 @@ public class LoadedPallet
     @Override
     public String toString()
     {
-        return "Pallet withWeight: " + weight + ", withHeight: " + height;
+        if (this.amount < 10)
+        {
+            return String.format("0%d - %.1fmm - %dmm - %.3fmm - %.1fmm", amount, thickness, length, weight, height);
+        }
+        
+        return String.format("%d - %.1fmm - %dmm - %.3fmm - %.1fmm", amount, thickness, length, weight, height);
     }
 
     /**
@@ -66,5 +80,53 @@ public class LoadedPallet
     public void setHeight(float height)
     {
         this.height = height;
+    }
+
+    /**
+     * @return the amount
+     */
+    public int getAmount()
+    {
+        return amount;
+    }
+
+    /**
+     * @param amount the amount to set
+     */
+    public void setAmount(int amount)
+    {
+        this.amount = amount;
+    }
+
+    /**
+     * @return the thickness
+     */
+    public float getThickness()
+    {
+        return thickness;
+    }
+
+    /**
+     * @param thickness the thickness to set
+     */
+    public void setThickness(float thickness)
+    {
+        this.thickness = thickness;
+    }
+
+    /**
+     * @return the length
+     */
+    public int getLength()
+    {
+        return length;
+    }
+
+    /**
+     * @param length the length to set
+     */
+    public void setLength(int length)
+    {
+        this.length = length;
     }
 }

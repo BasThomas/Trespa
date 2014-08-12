@@ -95,6 +95,7 @@ public class LaunchGUIViewController
         
         int currentQuantity;
         int currentPanelsPer;
+        int currentPanelsOnPallet;
         
         List<LoadedPallet> pallets = new ArrayList<>();
         
@@ -125,14 +126,16 @@ public class LaunchGUIViewController
                     currentPalletHeightIncludingPlacement = p.getPalletHeight() + (p.getThickness() * currentPanelsPer);
                     currentPalletWeightIncludingPlacement = palletWeight + (currentPanelsPer * p.getGrossWeight());
                     currentQuantity -= currentPanelsPer;
+                    currentPanelsOnPallet = currentPanelsPer;
                 }
                 else
                 {
                     currentPalletHeightIncludingPlacement = p.getPalletHeight() + (p.getThickness() * currentQuantity);
                     currentPalletWeightIncludingPlacement = palletWeight + (currentQuantity * p.getGrossWeight());
+                    currentPanelsOnPallet = currentQuantity;
                 }
                 
-                pallets.add(new LoadedPallet(currentPalletWeightIncludingPlacement, currentPalletHeightIncludingPlacement));
+                pallets.add(new LoadedPallet(currentPalletWeightIncludingPlacement, currentPalletHeightIncludingPlacement, currentPanelsOnPallet, p.getThickness(), p.getLength()));
                 
                 totalPalletHeightIncludingPlacement += currentPalletHeightIncludingPlacement;
                 totalPalletWeightIncludingPlacement += currentPalletWeightIncludingPlacement;
