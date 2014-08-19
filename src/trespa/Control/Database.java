@@ -119,8 +119,9 @@ public class Database
                 int shippingID = rs.getInt("shippingID");
                 String shippingPoint = rs.getString("shippingPoint");
                 String postalCode = rs.getString("postalCode");
+                String countryAbbr = rs.getString("countryAbbr");
                 
-                ShippingPoint shippingPointObj = new ShippingPoint(shippingID, shippingPoint, postalCode);
+                ShippingPoint shippingPointObj = new ShippingPoint(shippingID, shippingPoint, postalCode, countryAbbr);
                 shippingPoints.add(shippingPointObj);
             }
         }

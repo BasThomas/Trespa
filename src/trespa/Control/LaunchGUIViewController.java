@@ -6,8 +6,11 @@
 
 package trespa.Control;
 
+import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import org.json.JSONObject;
 import trespa.Model.*;
 import trespa.Model.Tuples.*;
 
@@ -173,6 +176,54 @@ public class LaunchGUIViewController
     }
     
     /**
+     * Gets the geolocation for a specific address.
+     * @param address the address of the location.
+     * @param postalCode the postalCode of the location.
+     */
+    public void getGeoLocation(String address, String postalCode, String countryAbbr)
+    {
+        String language = "nl";
+        
+        String formattedAddress = address.replaceAll("\\s", "+");
+        String formattedPostalCode = postalCode.replaceAll("\\s", "");
+        
+        String request;
+        request = String.format(
+                "http://maps.googleapis.com/maps/api/geocode/json?" +
+                "address=%s," +
+                "&components=postal_code:%s" +
+                "|country:%s" +
+                "&language=%s", formattedAddress, formattedPostalCode, countryAbbr, language);
+        
+        String status = handleRequest(request);
+        System.out.println("Status: " + status);
+    }
+    
+    /**
+     * Handles the json of given request.
+     * @param request url containing API request.
+     */
+    public String handleRequest(String request)
+    {
+        String status = "";
+        
+        try
+        {
+            String jsonAsText = readUrl(request);
+            
+            JSONObject json = new JSONObject(jsonAsText);
+            
+            status = (String)json.get("status");
+        }
+        catch (Exception ex)
+        {
+            System.out.println(ex.getMessage());
+        }
+        
+        return status;
+    }
+    
+    /**
      * Gets a list of ShippingPoints.
      * @return list of ShippingPoints.
      */
@@ -197,5 +248,36 @@ public class LaunchGUIViewController
     public List<Country> fillComboBoxCountry()
     {
         return database.getCountries();
+    }
+    
+    /**
+     * Read contents from url.
+     * @param urlString the url.
+     * @return the contents of the url as a String.
+     */
+    private static String readUrl(String urlString) throws Exception
+    {
+        BufferedReader reader = null;
+        try
+        {
+            URL url = new URL(urlString);
+            reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            StringBuilder buffer = new StringBuilder();
+            int read;
+            char[] chars = new char[1024];
+            while ((read = reader.read(chars)) != -1)
+            {
+                buffer.append(chars, 0, read);
+            }
+
+            return buffer.toString();
+        }
+        finally
+        {
+            if (reader != null)
+            {
+                reader.close();
+            }
+        }
     }
 }

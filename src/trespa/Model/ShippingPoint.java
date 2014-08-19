@@ -15,6 +15,7 @@ public class ShippingPoint
     private int shippingID;
     private String shippingPoint;
     private String postalCode;
+    private String countryAbbr;
     
     /**
      * Constructor.
@@ -22,11 +23,12 @@ public class ShippingPoint
      * @param shippingPoint String representation of the ShippingPoint.
      * @param postalCode String representation of the ShippingPoint's postal code.
      */
-    public ShippingPoint(int shippingID, String shippingPoint, String postalCode)
+    public ShippingPoint(int shippingID, String shippingPoint, String postalCode, String countryAbbr)
     {
         this.shippingID = shippingID;
         this.shippingPoint = shippingPoint;
         this.postalCode = postalCode;
+        this.countryAbbr = countryAbbr;
     }
     
     /**
@@ -85,5 +87,21 @@ public class ShippingPoint
     public void setPostalCode(String postalCode)
     {
         this.postalCode = postalCode;
+    }
+
+    /**
+     * @return the countryAbbr
+     */
+    public String getCountryAbbr()
+    {
+        return countryAbbr;
+    }
+
+    /**
+     * @param countryAbbr the countryAbbr to set
+     */
+    public void setCountryAbbr(String countryAbbr)
+    {
+        this.countryAbbr = countryAbbr;
     }
 }

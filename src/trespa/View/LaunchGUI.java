@@ -217,6 +217,14 @@ public class LaunchGUI extends javax.swing.JFrame
         heightForShipmentLabel.setText(String.format("Height: %.3fm", tfs.b));
         weightForShipmentLabel.setText(String.format("Weight: %.3fkg", tfs.c));
         loadingMetersLabel.setText(String.format("Loading meters: %dm", tfs.d));
+        
+        /*********************
+         **** GEOLOCATION ****
+         *********************/
+        
+        // Get shippingPoint's geolocation
+        lgvc.getGeoLocation("", s.getPostalCode(), s.getCountryAbbr());
+        
         costLabel.setText(String.format("Cost: €%.2f", lgvc.calculateTotalCost((int)tfs.f, (float)tfs.g)));
         
         List<LoadedPallet> pallets = (List<LoadedPallet>) tfs.e;
