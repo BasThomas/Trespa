@@ -281,10 +281,11 @@ public class Database
             openConnection();
             
             String sql =
-                    "SELECT COUNT(DISTINCT(p.customerID)) AS amountOfStops\n" +
-                    "FROM placement p, customer cu, shippingPoint s\n" +
-                    "WHERE p.customerID = cu.customerID\n" +
+                    "SELECT COUNT(DISTINCT(pl.customerID)) AS amountOfStops\n" +
+                    "FROM placement pl, customer cu, shippingPoint s\n" +
+                    "WHERE pl.customerID = cu.customerID\n" +
                     "AND cu.countryAbbr = ?\n" +
+                    "AND pl.placementID = 1143730\n" + // FOR NOW FOR NOW FOR NOW
                     "AND s.shippingID = ?;";
             
             ps = conn.prepareStatement(sql);
@@ -333,7 +334,7 @@ public class Database
                     "AND pl.packCode = pa.packCode\n" +
                     "AND cu.countryAbbr = ?\n" +
                     "AND s.shippingID = ?\n" +
-                    "AND pl.placementID = 1143730\n" + // FOR NOW FOR NOW FOR NOW
+                    "AND pl.placementID = 1143730\n" + // TESTING
                     "ORDER BY pl.issueDate ASC;";
             
             ps = conn.prepareStatement(sql);

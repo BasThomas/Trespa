@@ -71,13 +71,15 @@ public class LaunchGUIViewController
      * @param c Country
      * @param s ShippingPoint
      * @param t Truck
-     * @return Quintet containing total pallets for shipment,
+     * @return Septet containing total pallets for shipment,
      *          total height for shipment,
      *          total weight for shipment,
-     *          total loading meters for shipment and
-     *          the amount of pallets.
+     *          total loading meters for shipment,
+     *          the amount of pallets,
+     *          the amount of stops and
+     *          the amount of kilometers.
      */
-    public Quintet totalForShipment(Country c, ShippingPoint s, Truck t)
+    public Septet totalForShipment(Country c, ShippingPoint s, Truck t)
     {
         int totalPalletsForShipment = 0;
         float totalHeightForShipment;
@@ -146,9 +148,28 @@ public class LaunchGUIViewController
         totalWeightForShipment = totalPalletWeightIncludingPlacement; // In kilograms
         totalLoadingMetersForShipment = Math.round(palletLength * (totalHeightForShipment / t.getHeight()));
         
-        Quintet quintet = new Quintet(totalPalletsForShipment, totalHeightForShipment, totalWeightForShipment, totalLoadingMetersForShipment, pallets);
+        // Calculate stops
+        int stops = amountOfStops(c, s);
         
-        return quintet;
+        // Calculate kilometers
+        float kilometers = 0f;
+        
+        Septet septet = new Septet(totalPalletsForShipment, totalHeightForShipment, totalWeightForShipment, totalLoadingMetersForShipment, pallets, stops, kilometers);
+        
+        return septet;
+    }
+    
+    /**
+     * Calculates the total cost for a trip.
+     * @param stops amount of stops.
+     * @param kilometers the kilometers.
+     * @return the total cost for a trip.
+     */
+    public float calculateTotalCost(int stops, float kilometers)
+    {
+        int stoppingCosts = 90;
+        float kilometerCosts = 0.10f;
+        return (stops * stoppingCosts) + (kilometers * kilometerCosts);
     }
     
     /**
