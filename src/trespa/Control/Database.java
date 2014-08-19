@@ -6,6 +6,9 @@
 
 package trespa.Control;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -14,7 +17,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import org.json.*;
 import trespa.Model.*;
+import trespa.Model.Tuples.*;
 
 /**
  *
@@ -22,13 +27,15 @@ import trespa.Model.*;
  */
 public class Database
 {
-    Connection conn;
-    PreparedStatement ps;
-    ResultSet rs;
+    private Connection conn;
+    private PreparedStatement ps;
+    private ResultSet rs;
     
-    String host = "jdbc:mysql://localhost:3306/trespa";
-    String username = "root";
-    String password = "root";
+    private String host = "jdbc:mysql://localhost:3306/trespa";
+    private String username = "root";
+    private String password = "root";
+    
+    private boolean withAddress;
     
     /**
      * Constructor.
@@ -36,6 +43,132 @@ public class Database
     public Database()
     {
         openConnection();
+    }
+    
+    public boolean checkCoordinates(String latitude, String longitude)
+    {
+        boolean getCoordinates = false;
+        
+        if (latitude == null || latitude.equals(""))
+        {
+            // Get the latitude and longitude of the location.
+            getCoordinates = true;
+        }
+        
+        return getCoordinates;
+    }
+    
+    /**
+     * Gets the geolocation for a specific address.
+     * @param address the address of the location.
+     * @param postalCode the postalCode of the location.
+     * @param countryAbbr the abbreviation code for the country.
+     * @return pair containing longitude and altitude;
+     */
+    public Pair getGeoLocation(String address, String postalCode, String countryAbbr)
+    {   
+        String language = "nl";
+        
+        String formattedAddress = address.replaceAll("\\s", "+");
+        String formattedPostalCode = postalCode.replaceAll("\\s", "");
+        
+        String request;
+        
+        if (withAddress)
+        {
+            request = String.format(
+                "http://maps.googleapis.com/maps/api/geocode/json?" +
+                "address=%s," +
+                "&components=postal_code:%s" +
+                "|country:%s" +
+                "&language=%s", formattedAddress, formattedPostalCode, countryAbbr, language);
+        }
+        else
+        {
+            request = String.format(
+                "http://maps.googleapis.com/maps/api/geocode/json?" +
+                "address=%s" +
+                "&components=postal_code:%s" +
+                "&language=%s", formattedAddress, formattedPostalCode, language);
+            
+            withAddress = true;
+        }
+        
+        System.out.println("URL: " + request);
+        
+        if (handleRequest(request).a.toString().equals(""))
+        {
+            withAddress = false;
+            getGeoLocation(address, postalCode, countryAbbr);
+        }
+        
+        return handleRequest(request);
+    }
+    
+    /**
+     * Handles the json of given request.
+     * @param request url containing API request.
+     * @return 
+     */
+    public Pair handleRequest(String request)
+    {
+        String longitude = "";
+        String latitude = "";
+        try
+        {
+            String jsonAsText = readUrl(request);
+            
+            JSONObject json = new JSONObject(jsonAsText);
+            
+            // Check status
+            if (!json.getString("status").equals("OK"))
+            {
+                return new Pair("", "");
+            }
+            
+            JSONObject results = json.getJSONArray("results").getJSONObject(0);
+            JSONObject location = results.getJSONObject("geometry").getJSONObject("location");
+            
+            longitude = (String)location.get("lng").toString();
+            latitude = (String)location.get("lat").toString();
+        }
+        catch (Exception ex)
+        {
+            System.out.println(ex.getMessage());
+        }
+        
+        return new Pair(longitude, latitude);
+    }
+    
+    /**
+     * Read contents from url.
+     * @param urlString the url.
+     * @return the contents of the url as a String.
+     */
+    private static String readUrl(String urlString) throws Exception
+    {
+        BufferedReader reader = null;
+        try
+        {
+            URL url = new URL(urlString);
+            reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            StringBuilder buffer = new StringBuilder();
+            int read;
+            char[] chars = new char[1024];
+            while ((read = reader.read(chars)) != -1)
+            {
+                buffer.append(chars, 0, read);
+            }
+
+            return buffer.toString();
+        }
+        finally
+        {
+            if (reader != null)
+            {
+                reader.close();
+            }
+        }
     }
     
     /**
@@ -95,6 +228,53 @@ public class Database
         }
     }
     
+    public void insertGeoLocation(Pair geolocation, int identifier, String table)
+    {
+        try
+        {
+            openConnection();
+            
+            String sql;
+            
+            switch (table)
+            {
+                case "ShippingPoint":
+                    sql =
+                            "UPDATE ShippingPoint " +
+                            "SET latitude = ?, " +
+                            "longitude = ? " +
+                            "WHERE shippingID = ?";
+                    break;
+                    
+                case "Customer":
+                    sql =
+                            "UPDATE Customer " +
+                            "SET latitude = ?, " +
+                            "longitude = ? " +
+                            "WHERE customerID = ?";
+                    break;
+                    
+                default:
+                    return;
+            }
+            
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, geolocation.a.toString());
+            ps.setString(2, geolocation.b.toString());
+            ps.setInt(3, identifier);
+            
+            ps.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            System.out.printf("test" + e.getMessage() + "\n");
+        }
+        finally
+        {
+            closeConnection();
+        }
+    }
+    
     /**
      * Gets a list of ShippingPoints.
      * @return list of ShippingPoints.
@@ -116,12 +296,21 @@ public class Database
             
             while(rs.next())
             {
+                System.out.println(1);
                 int shippingID = rs.getInt("shippingID");
                 String shippingPoint = rs.getString("shippingPoint");
                 String postalCode = rs.getString("postalCode");
                 String countryAbbr = rs.getString("countryAbbr");
+                String latitude = rs.getString("latitude");
+                String longitude = rs.getString("longitude");
                 
-                ShippingPoint shippingPointObj = new ShippingPoint(shippingID, shippingPoint, postalCode, countryAbbr);
+                if (checkCoordinates(latitude, longitude))
+                {
+                    insertGeoLocation(getGeoLocation("", postalCode, countryAbbr), shippingID, "ShippingPoint");
+                    getShippingPoints();
+                }
+                
+                ShippingPoint shippingPointObj = new ShippingPoint(shippingID, shippingPoint, postalCode, countryAbbr, latitude, longitude);
                 shippingPoints.add(shippingPointObj);
             }
         }
@@ -166,6 +355,14 @@ public class Database
                 String country = rs.getString("country");
                 String countryAbbr = rs.getString("countryAbbr");
                 String regionDesc = rs.getString("regionDesc");
+                String latitude = rs.getString("latitude");
+                String longitude = rs.getString("longitude");
+                
+                if (checkCoordinates(latitude, longitude))
+                {
+                    insertGeoLocation(getGeoLocation(location, postalCode, countryAbbr), customerID, "Customer");
+                    getCustomers();
+                }
                 
                 Country countryObj = new Country(country, countryAbbr, regionDesc);
                 

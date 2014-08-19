@@ -16,19 +16,26 @@ public class ShippingPoint
     private String shippingPoint;
     private String postalCode;
     private String countryAbbr;
+    private String latitude;
+    private String longitude;
     
     /**
      * Constructor.
      * @param shippingID The ShippingPoint's ID.
      * @param shippingPoint String representation of the ShippingPoint.
      * @param postalCode String representation of the ShippingPoint's postal code.
+     * @param countryAbbr The countryAbbr of the ShippingPoint
+     * @param latitude The latitude value of the ShippingPoint.
+     * @param longitude The longitude value of the ShippingPoint.
      */
-    public ShippingPoint(int shippingID, String shippingPoint, String postalCode, String countryAbbr)
+    public ShippingPoint(int shippingID, String shippingPoint, String postalCode, String countryAbbr, String latitude, String longitude)
     {
         this.shippingID = shippingID;
         this.shippingPoint = shippingPoint;
         this.postalCode = postalCode;
         this.countryAbbr = countryAbbr;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
     
     /**
@@ -103,5 +110,37 @@ public class ShippingPoint
     public void setCountryAbbr(String countryAbbr)
     {
         this.countryAbbr = countryAbbr;
+    }
+
+    /**
+     * @return the latitude
+     */
+    public String getLatitude()
+    {
+        return latitude;
+    }
+
+    /**
+     * @param latitude the latitude to set
+     */
+    public void setLatitude(String latitude)
+    {
+        this.latitude = latitude;
+    }
+
+    /**
+     * @return the longitude
+     */
+    public String getLongitude()
+    {
+        return longitude;
+    }
+
+    /**
+     * @param longitude the longitude to set
+     */
+    public void setLongitude(String longitude)
+    {
+        this.longitude = longitude;
     }
 }

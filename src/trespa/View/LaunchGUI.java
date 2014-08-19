@@ -241,6 +241,8 @@ public class LaunchGUI extends javax.swing.JFrame
      */
     private void automaticButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_automaticButtonActionPerformed
     {//GEN-HEADEREND:event_automaticButtonActionPerformed
+        lgvc.getCust();
+        
         ShippingPoint s = (ShippingPoint) shippingPointComboBox.getSelectedItem();
         Truck t = (Truck) truckComboBox.getSelectedItem();
         Country c = (Country) countryComboBox.getSelectedItem();

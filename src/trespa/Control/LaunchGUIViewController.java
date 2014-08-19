@@ -30,6 +30,11 @@ public class LaunchGUIViewController
         database = new Database();
     }
     
+    public void getCust()
+    {
+        database.getCustomers();
+    }
+    
     /**
      * Gets the amount of stops for a certain route.
      * @param c Country
@@ -179,6 +184,7 @@ public class LaunchGUIViewController
      * Gets the geolocation for a specific address.
      * @param address the address of the location.
      * @param postalCode the postalCode of the location.
+     * @param countryAbbr the abbreviation code for the country.
      */
     public void getGeoLocation(String address, String postalCode, String countryAbbr)
     {
@@ -194,6 +200,7 @@ public class LaunchGUIViewController
                 "&components=postal_code:%s" +
                 "|country:%s" +
                 "&language=%s", formattedAddress, formattedPostalCode, countryAbbr, language);
+        System.out.println("URL: " + request);
         
         String status = handleRequest(request);
         System.out.println("Status: " + status);
