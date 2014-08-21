@@ -222,10 +222,14 @@ public class LaunchGUI extends javax.swing.JFrame
          **** GEOLOCATION ****
          *********************/
         
-        // Get shippingPoint's geolocation
-        lgvc.getGeoLocation("", s.getPostalCode(), s.getCountryAbbr());
+        Pair geoStart = new Pair("51.2636378", "5.6439594");
+        Pair geoEnd = new Pair("48.8231099", "2.7080427");
         
-        costLabel.setText(String.format("Cost: €%.2f", lgvc.calculateTotalCost((int)tfs.f, (float)tfs.g)));
+        // Get shippingPoint's geolocation
+        int distance = Math.round(lgvc.getDistance(geoStart, geoEnd));
+        
+        costLabel.setText(distance + "");
+        //costLabel.setText(String.format("Cost: €%.2f", lgvc.calculateTotalCost((int)tfs.f, (float)tfs.g)));
         
         List<LoadedPallet> pallets = (List<LoadedPallet>) tfs.e;
         
@@ -241,8 +245,6 @@ public class LaunchGUI extends javax.swing.JFrame
      */
     private void automaticButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_automaticButtonActionPerformed
     {//GEN-HEADEREND:event_automaticButtonActionPerformed
-        lgvc.getCust();
-        
         ShippingPoint s = (ShippingPoint) shippingPointComboBox.getSelectedItem();
         Truck t = (Truck) truckComboBox.getSelectedItem();
         Country c = (Country) countryComboBox.getSelectedItem();

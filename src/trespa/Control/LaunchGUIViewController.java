@@ -10,7 +10,7 @@ import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import org.json.JSONObject;
+import org.json.*;
 import trespa.Model.*;
 import trespa.Model.Tuples.*;
 
@@ -176,58 +176,64 @@ public class LaunchGUIViewController
     public float calculateTotalCost(int stops, float kilometers)
     {
         int stoppingCosts = 90;
-        float kilometerCosts = 0.10f;
+        float kilometerCosts = 1.10f;
         return (stops * stoppingCosts) + (kilometers * kilometerCosts);
     }
     
     /**
      * Gets the geolocation for a specific address.
-     * @param address the address of the location.
-     * @param postalCode the postalCode of the location.
-     * @param countryAbbr the abbreviation code for the country.
+     * @param geoStart geolocation of start address.
+     * @param geoEnd geolocation of end address.
      */
-    public void getGeoLocation(String address, String postalCode, String countryAbbr)
+    public float getDistance(Pair geoStart, Pair geoEnd)
     {
         String language = "nl";
         
-        String formattedAddress = address.replaceAll("\\s", "+");
-        String formattedPostalCode = postalCode.replaceAll("\\s", "");
+        String geoStartString = geoStart.a.toString() + "," + geoStart.b.toString();
+        String geoEndString = geoEnd.a.toString() + "," + geoEnd.b.toString();
         
         String request;
         request = String.format(
-                "http://maps.googleapis.com/maps/api/geocode/json?" +
-                "address=%s," +
-                "&components=postal_code:%s" +
-                "|country:%s" +
-                "&language=%s", formattedAddress, formattedPostalCode, countryAbbr, language);
+                "http://maps.googleapis.com/maps/api/distancematrix/json?" +
+                "origins=%s" +
+                "&destinations=%s" +
+                "&language=%s", geoStartString, geoEndString, language);
         System.out.println("URL: " + request);
         
-        String status = handleRequest(request);
-        System.out.println("Status: " + status);
+        float distance = handleRequest(request);
+        System.out.println("Distance: " + distance);
+        
+        return distance;
     }
     
     /**
      * Handles the json of given request.
      * @param request url containing API request.
      */
-    public String handleRequest(String request)
+    public float handleRequest(String request)
     {
-        String status = "";
-        
         try
         {
             String jsonAsText = readUrl(request);
             
             JSONObject json = new JSONObject(jsonAsText);
+            // Check status
+            if (!json.getString("status").equals("OK"))
+            {
+                return 0f;
+            }
             
-            status = (String)json.get("status");
+            JSONObject elements = json.getJSONArray("rows").getJSONObject(0);
+            JSONObject distance = elements.getJSONArray("elements").getJSONObject(0);
+            //String ddistance = elements.get("text").toString();
+            System.out.println(distance);
         }
         catch (Exception ex)
         {
             System.out.println(ex.getMessage());
         }
         
-        return status;
+        return 0f;
     }
     
     /**
