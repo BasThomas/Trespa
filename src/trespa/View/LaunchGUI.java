@@ -73,7 +73,7 @@ public class LaunchGUI extends javax.swing.JFrame
 
         stopsLabel.setText("# stops (customers to deliver to)");
 
-        placementsLabel.setText("# placements to deliver");
+        placementsLabel.setText("# orderlines to deliver");
 
         manualButton.setText("Manual");
         manualButton.addActionListener(new java.awt.event.ActionListener()
@@ -195,7 +195,7 @@ public class LaunchGUI extends javax.swing.JFrame
         
         Pair sAndP = lgvc.stopsAndPlacementAmount(c, s);
         stopsLabel.setText(String.format("# stops (customers to deliver to): %d", sAndP.a));
-        placementsLabel.setText(String.format("# placements to deliver: %d", sAndP.b));
+        placementsLabel.setText(String.format("# orderlines to deliver: %d", sAndP.b));
     }//GEN-LAST:event_printButtonActionPerformed
     
     /**
@@ -225,11 +225,9 @@ public class LaunchGUI extends javax.swing.JFrame
         Pair geoStart = new Pair("51.2636378", "5.6439594");
         Pair geoEnd = new Pair("48.8231099", "2.7080427");
         
-        // Get shippingPoint's geolocation
         int distance = Math.round(lgvc.getDistance(geoStart, geoEnd));
         
-        costLabel.setText(distance + "");
-        //costLabel.setText(String.format("Cost: €%.2f", lgvc.calculateTotalCost((int)tfs.f, (float)tfs.g)));
+        costLabel.setText(String.format("Cost: €%.2f", lgvc.calculateTotalCost((int)tfs.f, (float)distance)));
         
         List<LoadedPallet> pallets = (List<LoadedPallet>) tfs.e;
         

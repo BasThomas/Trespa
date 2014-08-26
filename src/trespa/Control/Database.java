@@ -483,7 +483,7 @@ public class Database
                     "FROM placement pl, customer cu, shippingPoint s\n" +
                     "WHERE pl.customerID = cu.customerID\n" +
                     "AND cu.countryAbbr = ?\n" +
-                    "AND pl.placementID = 1143730\n" + // FOR NOW FOR NOW FOR NOW
+                    //"AND pl.placementID = 1143730\n" + // FOR NOW FOR NOW FOR NOW
                     "AND s.shippingID = ?;";
             
             ps = conn.prepareStatement(sql);
@@ -532,7 +532,7 @@ public class Database
                     "AND pl.packCode = pa.packCode\n" +
                     "AND cu.countryAbbr = ?\n" +
                     "AND s.shippingID = ?\n" +
-                    "AND pl.placementID = 1143730\n" + // TESTING
+                    //"AND pl.placementID = 1143730\n" + // TESTING
                     "ORDER BY pl.issueDate ASC;";
             
             ps = conn.prepareStatement(sql);

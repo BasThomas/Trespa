@@ -177,6 +177,7 @@ public class LaunchGUIViewController
     {
         int stoppingCosts = 90;
         float kilometerCosts = 1.10f;
+        System.out.println("stops:" + stops + ", kms: " + kilometers);
         return (stops * stoppingCosts) + (kilometers * kilometerCosts);
     }
     
@@ -184,6 +185,7 @@ public class LaunchGUIViewController
      * Gets the geolocation for a specific address.
      * @param geoStart geolocation of start address.
      * @param geoEnd geolocation of end address.
+     * @return total distance.
      */
     public float getDistance(Pair geoStart, Pair geoEnd)
     {
@@ -201,7 +203,6 @@ public class LaunchGUIViewController
         System.out.println("URL: " + request);
         
         float distance = handleRequest(request);
-        System.out.println("Distance: " + distance);
         
         return distance;
     }
@@ -212,6 +213,8 @@ public class LaunchGUIViewController
      */
     public float handleRequest(String request)
     {
+        float distance = 0f;
+        
         try
         {
             String jsonAsText = readUrl(request);
@@ -222,18 +225,20 @@ public class LaunchGUIViewController
             {
                 return 0f;
             }
-            
             JSONObject elements = json.getJSONArray("rows").getJSONObject(0);
-            JSONObject distance = elements.getJSONArray("elements").getJSONObject(0);
-            //String ddistance = elements.get("text").toString();
-            System.out.println(distance);
+            JSONObject moreElements = elements.getJSONArray("elements").getJSONObject(0);
+            JSONObject distanceJSON = moreElements.getJSONObject("distance");
+            
+            String distanceText = distanceJSON.getString("text");
+            
+            distance = Float.parseFloat(distanceText.substring(0, distanceText.indexOf(' ')));
         }
         catch (Exception ex)
         {
             System.out.println(ex.getMessage());
         }
         
-        return 0f;
+        return distance;
     }
     
     /**

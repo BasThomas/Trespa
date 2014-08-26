@@ -156,7 +156,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="placementsLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="# placements to deliver"/>
+        <Property name="text" type="java.lang.String" value="# orderlines to deliver"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="manualButton">
