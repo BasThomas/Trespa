@@ -9,6 +9,7 @@ package trespa.Control;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.json.*;
 import trespa.Model.*;
@@ -98,6 +99,7 @@ public class LaunchGUIViewController
         
         int totalPalletHeightIncludingPlacement = 0;
         int totalPalletWeightIncludingPlacement = 0;
+        int totalLoadingMeters = 0;
         
         int currentPalletsForPlacement;
         float currentPalletWeightIncludingPlacement;
@@ -106,12 +108,12 @@ public class LaunchGUIViewController
         int currentQuantity;
         int currentPanelsPer;
         int currentPanelsOnPallet;
+        int currentPalletLength;
         
         List<LoadedPallet> pallets = new ArrayList<>();
         
         // Might change!
         int palletWeight = 40; // In kilograms
-        int palletLength = 7; // In meters
         
         for(Placement p : placements)
         {
@@ -145,7 +147,7 @@ public class LaunchGUIViewController
                     currentPanelsOnPallet = currentQuantity;
                 }
                 
-                pallets.add(new LoadedPallet(currentPalletWeightIncludingPlacement, currentPalletHeightIncludingPlacement, currentPanelsOnPallet, p.getThickness(), p.getLength()));
+                pallets.add(new LoadedPallet(p.getCustomer(), currentPalletWeightIncludingPlacement, currentPalletHeightIncludingPlacement, currentPanelsOnPallet, p.getThickness(), p.getLength()));
                 
                 totalPalletHeightIncludingPlacement += currentPalletHeightIncludingPlacement;
                 totalPalletWeightIncludingPlacement += currentPalletWeightIncludingPlacement;
@@ -154,13 +156,15 @@ public class LaunchGUIViewController
         
         totalHeightForShipment = ((float)totalPalletHeightIncludingPlacement / 1000); // In meters
         totalWeightForShipment = totalPalletWeightIncludingPlacement; // In kilograms
-        totalLoadingMetersForShipment = Math.round(palletLength * (totalHeightForShipment / t.getHeight()));
+        totalLoadingMetersForShipment = Math.round(totalLoadingMeters * (totalHeightForShipment / t.getHeight()));
         
         // Calculate stops
         int stops = amountOfStops(c, s);
         
         // Calculate kilometers
         float kilometers = 0f;
+        
+        Collections.sort(pallets, new CustomerIDSorter());
         
         Septet septet = new Septet(totalPalletsForShipment, totalHeightForShipment, totalWeightForShipment, totalLoadingMetersForShipment, pallets, stops, kilometers);
         

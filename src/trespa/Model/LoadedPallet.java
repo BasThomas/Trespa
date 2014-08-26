@@ -17,17 +17,20 @@ public class LoadedPallet
     private int amount;
     private float thickness;
     private int length;
+    private Customer customer;
     
     /**
      * Constructor.
+     * @param customer The loaded pallet's customer.
      * @param weight Weight of the pallet.
      * @param height Height of the pallet.
      * @param amount Amount of panels on pallet.
      * @param thickness Thickness of panel.
      * @param length Length of panel.
      */
-    public LoadedPallet(float weight, float height, int amount, float thickness, int length)
+    public LoadedPallet(Customer customer, float weight, float height, int amount, float thickness, int length)
     {
+        this.customer = customer;
         this.weight = weight;
         this.height = height;
         this.amount = amount;
@@ -44,10 +47,10 @@ public class LoadedPallet
     {
         if (this.amount < 10)
         {
-            return String.format("0%d - %.1fmm - %dmm - %.3fkg - %.1fmm", amount, thickness, length, weight, height);
+            return String.format("[%d] 0%d - %.1fmm - %dmm - %.3fkg - %.1fmm", customer.getCustomerID(), amount, thickness, length, weight, height);
         }
         
-        return String.format("%d - %.1fmm - %dmm - %.3fkg - %.1fmm", amount, thickness, length, weight, height);
+        return String.format("[%d] %d - %.1fmm - %dmm - %.3fkg - %.1fmm", customer.getCustomerID(), amount, thickness, length, weight, height);
     }
 
     /**
@@ -128,5 +131,21 @@ public class LoadedPallet
     public void setLength(int length)
     {
         this.length = length;
+    }
+
+    /**
+     * @return the customer
+     */
+    public Customer getCustomer()
+    {
+        return customer;
+    }
+
+    /**
+     * @param customer the customer to set
+     */
+    public void setCustomer(Customer customer)
+    {
+        this.customer = customer;
     }
 }

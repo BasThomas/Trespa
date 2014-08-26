@@ -222,7 +222,7 @@ public class LaunchGUI extends javax.swing.JFrame
          **** GEOLOCATION ****
          *********************/
         
-        Pair geoStart = new Pair("51.2636378", "5.6439594");
+        Pair geoStart = new Pair(s.getLongitude(), s.getLatitude());
         Pair geoEnd = new Pair("48.8231099", "2.7080427");
         
         int distance = Math.round(lgvc.getDistance(geoStart, geoEnd));
