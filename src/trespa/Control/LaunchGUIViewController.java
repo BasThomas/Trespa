@@ -6,6 +6,7 @@
 
 package trespa.Control;
 
+import trespa.Model.Comparators.CustomerIDSorter;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;

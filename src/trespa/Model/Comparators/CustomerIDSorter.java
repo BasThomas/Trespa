@@ -4,9 +4,10 @@
  * and open the template in the editor.
  */
 
-package trespa.Model;
+package trespa.Model.Comparators;
 
 import java.util.Comparator;
+import trespa.Model.LoadedPallet;
 
 /**
  *

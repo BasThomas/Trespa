@@ -45,6 +45,12 @@ public class Database
         openConnection();
     }
     
+    /**
+     * Check if coordinates have to be generated.
+     * @param latitude the latitude of the location.
+     * @param longitude the longitude of the location.
+     * @return if the coordinates have to be generated or not.
+     */
     public boolean checkCoordinates(String latitude, String longitude)
     {
         boolean getCoordinates = false;
@@ -56,6 +62,81 @@ public class Database
         }
         
         return getCoordinates;
+    }
+    
+    /**
+     * Checks if the distance from this point has to be calculated.
+     * @param id the ID of the location to check.
+     * @param table the table where to check for.
+     * @return if the distance has to be calculated or not.
+     */
+    public boolean checkRouteTable(int id, String table)
+    {
+        boolean getDistance = true;
+        
+        try
+        {
+            openConnection();
+            
+            String sql =
+                    "SELECT * " +
+                    "FROM ? " +
+                    "WHERE fromPoint = ? " +
+                    "OR toPoint = ?";
+            
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, table);
+            ps.setInt(2, id);
+            ps.setInt(3, id);
+            
+            rs = ps.executeQuery();
+            
+            while(rs.next())
+            {
+                // Point already in table; no calculating needed.
+                getDistance = false;
+                break;
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        finally
+        {
+            closeConnection();
+        }
+        
+        return getDistance;
+    }
+    
+    /**
+     * Calculate the distances between points.
+     * @param id the point's ID.
+     */
+    public void calculateDistances(int id)
+    {
+        // Get the customers and shippingPoints.
+        List<Customer> customers = getCustomers();
+        List<ShippingPoint> shippingPoints = getShippingPoints();
+        
+        for (Customer c : customers)
+        {
+            // Check if you're calculating distance to yourself.
+            if (c.getCustomerID() != id)
+            {
+                // Calculate the distance here.
+            }
+        }
+        
+        for (ShippingPoint s : shippingPoints)
+        {
+            // Check if you're calculating distance to yourself.
+            if (s.getShippingID() != id)
+            {
+                // Calculate the distance here.
+            }
+        }
     }
     
     /**
@@ -282,6 +363,7 @@ public class Database
     public List<ShippingPoint> getShippingPoints()
     {
         List<ShippingPoint> shippingPoints = new ArrayList<>();
+        String table = "ShippingPoint";
         
         try
         {
@@ -296,7 +378,6 @@ public class Database
             
             while(rs.next())
             {
-                System.out.println(1);
                 int shippingID = rs.getInt("shippingID");
                 String shippingPoint = rs.getString("shippingPoint");
                 String postalCode = rs.getString("postalCode");
@@ -308,6 +389,12 @@ public class Database
                 {
                     insertGeoLocation(getGeoLocation("", postalCode, countryAbbr), shippingID, "ShippingPoint");
                     getShippingPoints();
+                }
+                
+                // check if found in routeTable
+                if (checkRouteTable(shippingID, table))
+                {
+                    calculateDistances(shippingID);
                 }
                 
                 ShippingPoint shippingPointObj = new ShippingPoint(shippingID, shippingPoint, postalCode, countryAbbr, latitude, longitude);
