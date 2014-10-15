@@ -2,6 +2,14 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/Users/Bas/Documents/Programming/_NetBeans/Trespa/src/trespa/Model/Truck.java</file>
+            <file>file:/Users/Bas/Documents/Programming/_NetBeans/Trespa/src/trespa/View/LaunchGUI.java</file>
+            <file>file:/Users/Bas/Documents/Programming/_NetBeans/Trespa/src/trespa/Control/Main.java</file>
+            <file>file:/Users/Bas/Documents/Programming/_NetBeans/Trespa/src/trespa/Control/LaunchGUIViewController.java</file>
+            <file>file:/Users/Bas/Documents/Programming/_NetBeans/Trespa/src/trespa/Control/Database.java</file>
+            <file>file:/Users/Bas/Documents/Programming/_NetBeans/Trespa/src/trespa/Model/Tuples/Triplet.java</file>
+            <file>file:/Users/Bas/Documents/Programming/_NetBeans/Trespa/src/trespa/Model/LoadedTruck.java</file>
+        </group>
     </open-files>
 </project-private>

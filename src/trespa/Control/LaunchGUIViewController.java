@@ -91,6 +91,22 @@ public class LaunchGUIViewController
      */
     public Septet totalForShipment(Country c, ShippingPoint s, Truck t)
     {
+        List<Triplet> distances = database.getDistances();
+        
+        List<Customer> goToCus = database.getCustomers();
+        
+        // Generate list with only French customers.
+        
+        for (Triplet trip : distances)
+        {
+            //System.out.println(trip.c);
+        }
+        
+        // Handle from front to end:
+        // Make new Truck. Start filling it with LoadedPallets. If full, start
+        // new truck.
+        // Iterate until all done.
+        
         int totalPalletsForShipment = 0;
         float totalHeightForShipment;
         float totalWeightForShipment;
@@ -165,6 +181,72 @@ public class LaunchGUIViewController
         // Calculate kilometers
         float kilometers = 0f;
         
+        // Calculate trucks
+        float curWeightLeft = t.getMaxWeight() * 1000;
+        float curHeightLeft = t.getHeight() * 1000;
+        float curLengthLeft = t.getLength() * 1000;
+        
+        int counter = 0;
+        
+        float curLongest = 0f;
+        
+        List<LoadedTruck> loadedTrucks = new ArrayList<>();
+        
+        for (LoadedPallet p : pallets)
+        {
+            List<LoadedPallet> truckPallets = new ArrayList<>();
+            float curPalletWeight = p.getWeight();
+            float curPalletHeight = p.getHeight();
+            float curPalletLength = p.getLength();
+            
+            if (curWeightLeft > curPalletWeight
+                    && curHeightLeft > curPalletHeight
+                    && curLengthLeft > curPalletLength)
+            {
+                // Go on...
+                // Update curLefts
+                curWeightLeft -= curPalletWeight;
+                curHeightLeft -= curPalletHeight;
+                
+                if (p.getLength() > curLongest)
+                {
+                    curLongest = p.getLength();
+                }
+                
+                truckPallets.add(p);
+            }
+            else
+            {
+                curLengthLeft -= curLongest;
+                curLongest = 0f;
+                curHeightLeft = t.getHeight() * 1000;
+                
+                if (curLengthLeft > p.getLength())
+                {
+                    truckPallets.add(p);
+                }
+                else
+                {
+                    // Make a new truck?
+                    LoadedTruck lt = new LoadedTruck(t.getTruckID(), t.getMaxWeight(), t.getLength(), t.getHeight(), truckPallets);
+                    loadedTrucks.add(lt);
+
+                    // Reset the pallets and truck, then add current pallet..
+                    truckPallets.clear();
+                    curLengthLeft = t.getLength() * 1000;
+
+                    curWeightLeft = (t.getMaxWeight() * 1000) - curPalletWeight;
+                    curHeightLeft = (t.getHeight() * 1000) - curPalletHeight;
+                    //curLengthLeft = (t.getLength() * 1000) - curPalletLength;
+
+                    truckPallets.add(p);
+                    System.out.println("starting truck " + counter++);
+                }
+            }
+        }
+        
+        System.out.println();
+        
         Collections.sort(pallets, new CustomerIDSorter());
         
         Septet septet = new Septet(totalPalletsForShipment, totalHeightForShipment, totalWeightForShipment, totalLoadingMetersForShipment, pallets, stops, kilometers);
@@ -215,6 +297,7 @@ public class LaunchGUIViewController
     /**
      * Handles the json of given request.
      * @param request url containing API request.
+     * @return distance as a float.
      */
     public float handleRequest(String request)
     {

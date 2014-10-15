@@ -16,6 +16,8 @@ public class Customer
     private String location;
     private String postalCode;
     private Country country;
+    private String latitude;
+    private String longitude;
     
     /**
      * Constructor.
@@ -24,12 +26,14 @@ public class Customer
      * @param postalCode String representation of the Customer's postal code.
      * @param country Country-object where customer is located.
      */
-    public Customer(int customerID, String location, String postalCode, Country country)
+    public Customer(int customerID, String location, String postalCode, Country country, String latitude, String longitude)
     {
         this.customerID = customerID;
         this.location = location;
         this.postalCode = postalCode;
         this.country = country;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
     
     /**
@@ -111,5 +115,37 @@ public class Customer
     public void setCountry(Country country)
     {
         this.country = country;
+    }
+
+    /**
+     * @return the latitude
+     */
+    public String getLatitude()
+    {
+        return latitude;
+    }
+
+    /**
+     * @param latitude the latitude to set
+     */
+    public void setLatitude(String latitude)
+    {
+        this.latitude = latitude;
+    }
+
+    /**
+     * @return the longitude
+     */
+    public String getLongitude()
+    {
+        return longitude;
+    }
+
+    /**
+     * @param longitude the longitude to set
+     */
+    public void setLongitude(String longitude)
+    {
+        this.longitude = longitude;
     }
 }

@@ -64,13 +64,108 @@ public class Database
         return getCoordinates;
     }
     
+    public void calcDistance()
+    {
+        List<ShippingPoint> sp = getShippingPoints();
+            
+        Pair pairFrom = new Pair(sp.get(0).getLongitude(), sp.get(0).getLatitude());
+        int fromPoint = sp.get(0).getShippingID();
+        
+        List<Customer> cus = getCustomers();
+        
+        Pair pairTo;
+        int toPoint;
+        
+        for (Customer c: cus)
+        {
+            pairTo = new Pair(c.getLongitude(), c.getLatitude());
+            toPoint = c.getCustomerID();
+            
+            float dist = getDistance(pairFrom, pairTo);
+            
+            try
+            {
+                openConnection();
+                
+                String sql =
+                        "INSERT INTO routeTableFR VALUES(?, ?, ?)";
+
+                ps = conn.prepareStatement(sql);
+                ps.setInt(1, fromPoint);
+                ps.setInt(2, toPoint);
+                ps.setFloat(3, dist);
+
+                ps.executeUpdate();
+                
+            }
+            catch (SQLException e)
+            {
+                System.out.println(e.getMessage());
+            }
+            finally
+            {
+                closeConnection();
+            }
+        }
+    }
+    
+    public float getDistance(Pair geoStart, Pair geoEnd)
+    {
+        String language = "nl";
+        
+        String geoStartString = geoStart.a.toString() + "," + geoStart.b.toString();
+        String geoEndString = geoEnd.a.toString() + "," + geoEnd.b.toString();
+        
+        String request;
+        request = String.format(
+                "http://maps.googleapis.com/maps/api/distancematrix/json?" +
+                "origins=%s" +
+                "&destinations=%s" +
+                "&language=%s", geoStartString, geoEndString, language);
+        System.out.println("URL: " + request);
+        
+        float distance = handleDisRequest(request);
+        
+        return distance;
+    }
+    
+    public float handleDisRequest(String request)
+    {
+        float distance = 0f;
+        
+        try
+        {
+            String jsonAsText = readUrl(request);
+            
+            JSONObject json = new JSONObject(jsonAsText);
+            // Check status
+            if (!json.getString("status").equals("OK"))
+            {
+                return 0f;
+            }
+            JSONObject elements = json.getJSONArray("rows").getJSONObject(0);
+            JSONObject moreElements = elements.getJSONArray("elements").getJSONObject(0);
+            JSONObject distanceJSON = moreElements.getJSONObject("distance");
+            
+            String distanceText = distanceJSON.getString("text");
+            
+            distance = Float.parseFloat(distanceText.substring(0, distanceText.indexOf(' ')));
+        }
+        catch (Exception ex)
+        {
+            System.out.println(ex.getMessage());
+        }
+        
+        return distance;
+    }
+    
     /**
      * Checks if the distance from this point has to be calculated.
      * @param id the ID of the location to check.
-     * @param table the table where to check for.
+     * @param country the current Country.
      * @return if the distance has to be calculated or not.
      */
-    public boolean checkRouteTable(int id, String table)
+    public boolean checkRouteTable(int id, String country)
     {
         boolean getDistance = true;
         
@@ -79,13 +174,13 @@ public class Database
             openConnection();
             
             String sql =
-                    "SELECT * " +
-                    "FROM ? " +
-                    "WHERE fromPoint = ? " +
+                    "SELECT *\n" +
+                    "FROM ?\n" +
+                    "WHERE fromPoint = ?\n" +
                     "OR toPoint = ?";
             
             ps = conn.prepareStatement(sql);
-            ps.setString(1, table);
+            ps.setString(1, "routeTable" + country);
             ps.setInt(2, id);
             ps.setInt(3, id);
             
@@ -93,6 +188,7 @@ public class Database
             
             while(rs.next())
             {
+                System.out.println("@@@@@@@@@@@@@@@@@@@@");
                 // Point already in table; no calculating needed.
                 getDistance = false;
                 break;
@@ -363,7 +459,6 @@ public class Database
     public List<ShippingPoint> getShippingPoints()
     {
         List<ShippingPoint> shippingPoints = new ArrayList<>();
-        String table = "ShippingPoint";
         
         try
         {
@@ -392,10 +487,12 @@ public class Database
                 }
                 
                 // check if found in routeTable
-                if (checkRouteTable(shippingID, table))
+                /*
+                if (checkRouteTable(shippingID, countryAbbr))
                 {
                     calculateDistances(shippingID);
                 }
+                */
                 
                 ShippingPoint shippingPointObj = new ShippingPoint(shippingID, shippingPoint, postalCode, countryAbbr, latitude, longitude);
                 shippingPoints.add(shippingPointObj);
@@ -411,6 +508,44 @@ public class Database
         }
         
         return shippingPoints;
+    }
+    
+    public List<Triplet> getDistances()
+    {
+        List<Triplet> distances = new ArrayList<>();
+        
+        try
+        {
+            openConnection();
+            
+            String sql =
+                    "SELECT *\n" +
+                    "FROM routeTableFR\n" +
+                    "ORDER BY distance;";
+            
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            
+            while(rs.next())
+            {
+                int fromID = rs.getInt("fromPoint");
+                int toID = rs.getInt("toPoint");
+                float distance = rs.getFloat("distance");
+                
+                Triplet t = new Triplet(fromID, toID, distance);
+                distances.add(t);
+            }
+        }
+        catch(SQLException e)
+        {
+            System.out.printf(e.getMessage() + "\n");
+        }
+        finally
+        {
+            closeConnection();
+        }
+        
+        return distances;
     }
     
     /**
@@ -453,7 +588,7 @@ public class Database
                 
                 Country countryObj = new Country(country, countryAbbr, regionDesc);
                 
-                Customer customer = new Customer(customerID, location, postalCode, countryObj);
+                Customer customer = new Customer(customerID, location, postalCode, countryObj, latitude, longitude);
                 customers.add(customer);
             }
         }
@@ -637,6 +772,8 @@ public class Database
                 int customerID = rs.getInt("customerID");
                 String location = rs.getString("location");
                 String postalCode = rs.getString("postalCode");
+                String latitude = rs.getString("latitude");
+                String longitude = rs.getString("longitude");
                 
                 String productline = rs.getString("productline");
                 
@@ -654,7 +791,7 @@ public class Database
                 
                 Country countryObj = new Country(countryString, countryAbbr, regionDesc);
                 
-                Customer customerObj = new Customer(customerID, location, postalCode, countryObj);
+                Customer customerObj = new Customer(customerID, location, postalCode, countryObj, latitude, longitude);
                 Productline productlineObj = new Productline(productline);
                 
                 Placement placement = new Placement(placementID, deliveryItem, customerObj, issueDate, productlineObj, thickness, width, length, quantity, panelsPer, grossWeight, palletHeight, material);
